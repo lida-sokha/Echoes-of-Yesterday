@@ -1,64 +1,86 @@
 ﻿using UnityEngine;
+using TMPro;
 
 public class PlayerInteract : MonoBehaviour
 {
     public float interactDistance = 3f;
-
-    [Tooltip("A reference to your script that handles camera looking. Must be assigned in the Inspector!")]
+    public Camera playerCamera;
     public MonoBehaviour cameraLookScript;
+
+    [Header("UI")]
+    public TextMeshProUGUI interactText;
+
+    void Start()
+    {
+        if (playerCamera == null)
+            playerCamera = Camera.main;
+
+        if (interactText != null)
+            interactText.gameObject.SetActive(false);
+    }
 
     void Update()
     {
-        // 🚨 CRITICAL CHANGE: Using the E key for interaction 🚨
+        CheckForInteractable();
+
         if (Input.GetKeyDown(KeyCode.E))
         {
             TryInteract();
         }
-
-        // Check for an escape/cancel key
+        if (Input.GetMouseButtonDown(0))
+        {
+            TryInteract();
+        }
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             UnlockCursorAndResumeLook();
         }
     }
 
-    void TryInteract()
+    void CheckForInteractable()
     {
-        Ray ray = new Ray(
-            Camera.main.transform.position,
-            Camera.main.transform.forward
-        );
-
+        Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit, interactDistance))
         {
-             
+            EleInteraction interaction =
+                hit.collider.GetComponentInParent<EleInteraction>();
 
-            // 2. SECONDARY CHECK: SIMPLE DOOR (Your modern door script)
-            
-
-            // 3. TERTIARY CHECK: OLD DOOR (electric_open, for backward compatibility)
-            electric_open oldDoor = hit.collider.GetComponent<electric_open>();
-            if (oldDoor != null)
+            if (interaction != null)
             {
-                oldDoor.Interact();
+                interactText.gameObject.SetActive(true);
+                interactText.text = "Click to Open";
                 return;
             }
         }
+
+        interactText.gameObject.SetActive(false);
     }
 
-    // --- HELPER FUNCTIONS ---
+    void TryInteract()
+    {
+        Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
+        RaycastHit hit;
 
+        if (Physics.Raycast(ray, out hit, interactDistance))
+        {
+            EleInteraction interaction =
+                hit.collider.GetComponentInParent<EleInteraction>();
+
+            if (interaction != null)
+            {
+                interaction.Interact();
+            }
+        }
+    }
     public void LockCursorAndStopLook()
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
         if (cameraLookScript != null)
-        {
             cameraLookScript.enabled = false;
-        }
     }
 
     public void UnlockCursorAndResumeLook()
@@ -67,16 +89,6 @@ public class PlayerInteract : MonoBehaviour
         Cursor.visible = false;
 
         if (cameraLookScript != null)
-        {
             cameraLookScript.enabled = true;
-        }
-    }
-
-    void OnApplicationFocus(bool hasFocus)
-    {
-        if (hasFocus)
-        {
-            UnlockCursorAndResumeLook();
-        }
     }
 }
