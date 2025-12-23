@@ -1,9 +1,10 @@
-﻿using UnityEngine;
+using UnityEngine;
 
-public class DoorOpen : MonoBehaviour
+public class EleOpen : MonoBehaviour
 {
-    public float openAngle = 90f;
-    public float openSpeed = 2f;
+    public float openAngle = 90f;     // how much it opens
+    public float openSpeed = 2f;      // how fast
+    public bool openOnce = true;
 
     private bool isOpen = false;
     private Quaternion closedRot;
@@ -19,6 +20,19 @@ public class DoorOpen : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            float dist = Vector3.Distance(
+                Camera.main.transform.position,
+                transform.position
+            );
+
+            if (dist < 2f && !isOpen)
+            {
+                OpenDoor();
+            }
+        }
+
         if (isOpen)
         {
             transform.rotation = Quaternion.Slerp(
@@ -29,10 +43,8 @@ public class DoorOpen : MonoBehaviour
         }
     }
 
-    // 👉 CALLED BY PLAYER
-    public void Interact()
+    void OpenDoor()
     {
-        if (isOpen) return;
         isOpen = true;
     }
 }
