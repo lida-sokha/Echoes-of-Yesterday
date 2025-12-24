@@ -1422,7 +1422,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: GAME OVER
+  m_text: 'Ending
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3808d5349f97744818989a7f928e6f26, type: 2}
   m_sharedMaterial: {fileID: -4737397634806652334, guid: 3808d5349f97744818989a7f928e6f26, type: 2}
