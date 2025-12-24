@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.VisualScripting;
+using UnityEngine;
 
 public class DoorOpen : MonoBehaviour
 {
@@ -8,6 +9,8 @@ public class DoorOpen : MonoBehaviour
     private bool isOpen = false;
     private Quaternion closedRot;
     private Quaternion openRot;
+
+   
 
     void Start()
     {
@@ -27,6 +30,8 @@ public class DoorOpen : MonoBehaviour
                 Time.deltaTime * openSpeed
             );
         }
+        
+
     }
 
     // 👉 CALLED BY PLAYER
@@ -35,4 +40,5 @@ public class DoorOpen : MonoBehaviour
         if (isOpen) return;
         isOpen = true;
     }
+    
 }

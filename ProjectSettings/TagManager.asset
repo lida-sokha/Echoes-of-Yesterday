@@ -40,6 +40,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: puzzle1
+    uniqueID: 3918986513
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
